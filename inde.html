@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Format Converter</title>
+    <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+    <div>
+        <h2>Image Format Converter</h2>
+         
+        <!-- إدخال لرفع الصورة -->
+        <div class="file-upload">
+            <label for="upload" class="file-upload-label">Upload Image</label>
+            <input type="file" id="upload" accept="image/*">
+        </div>
+       
+        <!-- قائمة منسدلة لتحديد صيغة الصورة -->
+        <label for="format" >Choose Format:</label>
+        <select id="format">
+            <option value="image/jpeg">JPG</option>
+            <option value="image/png">PNG</option>
+            <option value="image/webp">WEBP</option>
+            <option value="image/svg+xml">SVG</option> <!-- إضافة SVG -->
+        </select>
+
+        <!-- زر التحويل -->
+        <button id="convert" class="and">Convert</button>
+        
+        <!-- رابط لتحميل الصورة المحولة -->
+        <a id="downloadLink" style="display:none;" download>Download Converted Image</a>
+    </div>
+
+    <script>
+        document.getElementById('convert').addEventListener('click', function () {
+            const fileInput = document.getElementById('upload');
+            const format = document.getElementById('format').value;
+
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.onload = function () {
+                        if (format === "image/svg+xml") {
+                            // إذا كانت الصيغة المطلوبة SVG
+                            const svgData = `
+                                <svg xmlns="http://www.w3.org/2000/svg" width="${img.width}" height="${img.height}">
+                                    <image href="${e.target.result}" width="${img.width}" height="${img.height}" />
+                                </svg>`;
+                            const svgBlob = new Blob([svgData], { type: 'image/svg+xml' });
+                            const svgUrl = URL.createObjectURL(svgBlob);
+
+                            const downloadLink = document.getElementById('downloadLink');
+                            downloadLink.href = svgUrl;
+                            downloadLink.download = 'converted-image.svg';
+                            downloadLink.style.display = 'inline';
+                        } else {
+                            // بالنسبة للصيغ الأخرى التي يدعمها canvas
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            ctx.drawImage(img, 0, 0);
+
+                            const dataUrl = canvas.toDataURL(format, 1.0);
+
+                            const downloadLink = document.getElementById('downloadLink');
+                            downloadLink.href = dataUrl;
+                            downloadLink.download = `converted-image.${format.split('/')[1]}`;
+                            downloadLink.style.display = 'inline';
+                        }
+                    };
+                    img.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please upload an image first.');
+            }
+        });
+    </script>
+</body>
+</html>
