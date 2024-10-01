@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer</title>
+    <link rel="stylesheet" href="siszy.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Resize Your Image</h1>
+        <div class="upload-section">
+            <label for="image-upload" class="upload-btn">Choose Image</label>
+            <input type="file" id="image-upload" accept="image/*" onchange="loadImage()">
+        </div>
+
+        <div id="image-preview-container" class="image-preview">
+            <img id="image-preview" src="" alt="Preview Image" style="display: none;">
+        </div>
+
+        <div class="resize-controls">
+            <div>
+                <label for="width-input">Width (px):</label>
+                <input type="number" id="width-input" placeholder="Enter width in px" min="1">
+            </div>
+            <div>
+                <label for="height-input">Height (px):</label>
+                <input type="number" id="height-input" placeholder="Enter height in px" min="1">
+            </div>
+            <button onclick="resizeImage()" id="resize-btn">Resize Image</button>
+        </div>
+
+        <a id="download-btn" class="download-btn" style="display: none;">Download Resized Image</a>
+    </div>
+
+    <script src="sisz.js"></script>
+</body>
+</html>

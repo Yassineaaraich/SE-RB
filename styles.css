@@ -1,0 +1,67 @@
+body {
+    background-color: #e9ecef; /* لون خلفية */
+    font-family: 'Arial', sans-serif;
+    height: 100vh; /* ارتفاع الصفحة بالكامل */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 100%; /* عرض كامل */
+    max-width: 600px; /* الحد الأقصى للعرض */
+    padding: 20px;
+    border-radius: 15px;
+    background-color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    border-radius: 15px;
+    padding: 20px;
+}
+
+#fileSelector {
+    border: 2px dashed #007bff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s;
+}
+
+#fileSelector:hover {
+    background-color: #e7f0ff;
+}
+
+.btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+#imageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #007bff;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    min-height: 300px; /* ارتفاع ثابت لمنطقة الصورة */
+    margin-top: 85px;
+}
+.from-group{
+    margin-top: 244px;
+}

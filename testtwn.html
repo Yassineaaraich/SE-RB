@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Remove Background</title>
+   <link rel="stylesheet" href="styles.css">
+    <!--<link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous"
+    />-->
+    <style>
+        /* Hide the input button using CSS */
+        #fileInput {
+            display: none;
+        }
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .description {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+  
+    <div class="container mt-4">
+        <div class="row mt-4 justify-content-center">
+            <div class="col-md-8 card mt-4 center-content">
+                <form>
+                    <div class="form-group">
+                        <!-- Element to replace file selection -->
+                        <div id="fileSelector" style="cursor: pointer;">
+                            <img class="png" src="87.png" alt="Upload" style="width: 250px; height: auto;">
+                            <p class="ms" id="fileName">No file chosen</p>
+                        </div>
+
+                        <!-- Hidden input element for file selection -->
+                        <input id="fileInput" type="file" />
+                    </div>
+
+                    <input
+                        class="btn"
+                        type="button"
+                        onclick="submitHandler()"
+                        value="REMOVE BACKGROUND"
+                    />
+                </form>
+                <br />
+                <button class="btn" onclick="downloadFile()">
+                    Download File
+                </button>
+              <div id="imageContainer" class="mt-4 d-flex justify-content-center align-items-center" style="height: 300px; border: 2px solid #007bff; border-radius: 10px; background-color: #f8f9fa;">
+    <!-- الصورة المعدلة ستظهر هنا -->
+</div>
+
+            <!-- The processed image will be added here -->
+            <br>
+            <br>
+        </div>
+
+        </div>
+        
+        <!-- Container to display the image after background removal -->
+      
+    </div>
+    <script src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+        let imageURL;
+
+        // Add click event to the image and text to open file selection window
+        document.getElementById('fileSelector').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+
+        // Add event to update the selected file name
+        document.getElementById('fileInput').addEventListener('change', function() {
+            const fileName = this.files[0] ? this.files[0].name : "No file chosen";
+            document.getElementById('fileName').textContent = fileName;
+        });
+
+        function submitHandler() {
+            console.log("click");
+            const fileInput = document.getElementById("fileInput");
+            console.log(fileInput.files);
+            const image = fileInput.files[0];
+
+            // Multipart file
+            const formData = new FormData();
+            formData.append("image_file", image);
+            formData.append("size", "auto");
+
+            const apiKey = "4x9LmCC2ZSjnNinwa2kH1yXF";
+
+            fetch("https://api.remove.bg/v1.0/removebg", {
+                method: "POST",
+                headers: {
+                    "X-Api-Key": apiKey,
+                },
+                body: formData,
+            })
+            .then(function (response) {
+                return response.blob();
+            })
+            .then(function (blob) {
+                console.log(blob);
+                const url = URL.createObjectURL(blob);
+                imageURL = url;
+
+                // Remove the previous image if any
+                const imageContainer = document.getElementById("imageContainer");
+                imageContainer.innerHTML = '';
+
+                // Create and display the new image
+                const img = document.createElement("img");
+                img.src = url;
+                img.classList.add("img-fluid");
+                imageContainer.appendChild(img);
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
+        }
+
+        function downloadFile() {
+            var anchorElement = document.createElement("a");
+            anchorElement.href = imageURL;
+            anchorElement.download = "bg-remove.png";
+            document.body.appendChild(anchorElement);
+
+            anchorElement.click();
+
+            document.body.removeChild(anchorElement);
+        }
+    </script>
+</body>
+</html>
