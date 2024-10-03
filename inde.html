@@ -44,6 +44,8 @@
                 reader.onload = function (e) {
                     const img = new Image();
                     img.onload = function () {
+                        const downloadLink = document.getElementById('downloadLink');
+
                         if (format === "image/svg+xml") {
                             // إذا كانت الصيغة المطلوبة SVG
                             const svgData = `
@@ -53,10 +55,12 @@
                             const svgBlob = new Blob([svgData], { type: 'image/svg+xml' });
                             const svgUrl = URL.createObjectURL(svgBlob);
 
-                            const downloadLink = document.getElementById('downloadLink');
                             downloadLink.href = svgUrl;
                             downloadLink.download = 'converted-image.svg';
                             downloadLink.style.display = 'inline';
+
+                            // إلغاء الرابط السابق بعد استخدامه
+                            window.URL.revokeObjectURL(svgUrl);
                         } else {
                             // بالنسبة للصيغ الأخرى التي يدعمها canvas
                             const canvas = document.createElement('canvas');
@@ -68,10 +72,12 @@
 
                             const dataUrl = canvas.toDataURL(format, 1.0);
 
-                            const downloadLink = document.getElementById('downloadLink');
                             downloadLink.href = dataUrl;
                             downloadLink.download = `converted-image.${format.split('/')[1]}`;
                             downloadLink.style.display = 'inline';
+
+                            // إلغاء الرابط السابق بعد استخدامه
+                            window.URL.revokeObjectURL(dataUrl);
                         }
                     };
                     img.src = e.target.result;
